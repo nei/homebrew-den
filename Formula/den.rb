@@ -1,8 +1,8 @@
 class Den < Formula
   desc "Den is a CLI utility for working with docker-compose environments"
-  version "1.0.0-beta.7"
-  url "https://github.com/swiftotter/den/archive/1.0.0-beta.7.tar.gz"
-  sha256 "2439bd12061bef278536f873143e18a44634d40b532841608f1c2dbf6b12a739"
+  version "1.0.0-beta.8"
+  url "https://github.com/swiftotter/den/archive/1.0.0-beta.8.tar.gz"
+  sha256 "d24ebce69484918c6c90853153877f8b67aba2d363a6bc57fba92626587571be"
   head "https://github.com/swiftotter/den.git", :branch => "main"
 
   def install
