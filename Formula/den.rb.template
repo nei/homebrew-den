@@ -37,6 +37,11 @@ class Den < Formula
             "--no-cache",
             "--build-arg", "DEN_VERSION=#{den_version}",
             "dashboard"
+      system "docker",
+            "compose",
+            "--project-directory", prefix,
+            "-p", "den",
+            "up", "-d"
     end
   end
 
@@ -49,7 +54,7 @@ class Den < Formula
       To start warden simply run:
         den svc up
       
-      This command will automatically run an installation if necessary to setup a trusted
+      This command will automatically run "den install" to setup a trusted
       local root certificate and sign an SSL certificate for use by services
       managed by warden via the "warden sign-certificate warden.test" command.
       To print a complete list of available commands simply run "den" without
