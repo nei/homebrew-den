@@ -29,7 +29,6 @@ class Den < Formula
 
     Pathname(prefix/"docker").cd do
       den_version = File.read(prefix/"version").strip()
-      den_version = "testing-bap14"
       system "docker",
             "compose",
             "-p", "den",
