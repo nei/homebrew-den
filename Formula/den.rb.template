@@ -7,8 +7,6 @@ class Den < Formula
   sha256 "${HASH}"
   head "https://github.com/swiftotter/den.git", :branch => "main"
 
-  conflicts_with "davidalger/warden/warden", because: "Den is a replacement fork of Warden"
-
   # Check if Docker Desktop is installed; otherwise, install it via brew
   depends_on cask: "docker" unless File.exists?("/Applications/Docker.app")
 
@@ -21,7 +19,8 @@ class Den < Formula
     ENV["PATH"] += ":/usr/local/bin" if OS.mac? || OS.linux?
 
     # Specify necessary environment variables
-    ENV["WARDEN_HOME_DIR"] = prefix
+    ENV["WARDEN_DIR"] = prefix
+    ENV["WARDEN_HOME_DIR"] = Dir.home
     ENV["WARDEN_SERVICE_DIR"] = prefix
 
     # Future proof environment variable names
@@ -30,6 +29,7 @@ class Den < Formula
 
     Pathname(prefix/"docker").cd do
       den_version = File.read(prefix/"version").strip()
+      den_version = "testing-bap14"
       system "docker",
             "compose",
             "-p", "den",
@@ -41,7 +41,8 @@ class Den < Formula
             "compose",
             "--project-directory", prefix,
             "-p", "den",
-            "up", "-d"
+            "-f", prefix/"docker/docker-compose.yml",
+            "up", "-d", "dashboard"
     end
   end
 
@@ -54,7 +55,7 @@ class Den < Formula
       To start warden simply run:
         den svc up
       
-      This command will automatically run "den install" to setup a trusted
+      This command will automatically run an installation if necessary to setup a trusted
       local root certificate and sign an SSL certificate for use by services
       managed by warden via the "warden sign-certificate warden.test" command.
       To print a complete list of available commands simply run "den" without
