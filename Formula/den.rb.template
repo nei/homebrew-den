@@ -64,37 +64,6 @@ class Den < Formula
     prefix.install Dir["*"]
   end
 
-  def post_install
-    # This is required so docker is found if it's not installed via brew
-    ENV["PATH"] += ":/usr/local/bin" if OS.mac? || OS.linux?
-
-    # Specify necessary environment variables
-    ENV["WARDEN_DIR"] = prefix
-    ENV["WARDEN_HOME_DIR"] = Dir.home
-    ENV["WARDEN_SERVICE_DIR"] = prefix
-
-    # Future proof environment variable names
-    ENV["DEN_HOME_DIR"] = prefix
-    ENV["DEN_SERVICE_DIR"] = prefix
-
-    Pathname(prefix/"docker").cd do
-      den_version = File.read(prefix/"version").strip()
-      system "docker",
-            "compose",
-            "-p", "den",
-            "build",
-            "--no-cache",
-            "--build-arg", "DEN_VERSION=#{den_version}",
-            "dashboard"
-      system "docker",
-            "compose",
-            "--project-directory", prefix,
-            "-p", "den",
-            "-f", prefix/"docker/docker-compose.yml",
-            "up", "-d", "dashboard"
-    end
-  end
-
   def caveats
     <<~EOS
       Den manages a set of global services on the docker host machine. You
