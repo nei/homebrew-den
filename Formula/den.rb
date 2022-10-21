@@ -17,9 +17,18 @@ class DockerRequirement < Requirement
   def self.has_docker?
     self.docker_installed? &&
       (
-        self.docker_minimum_version_met? &&
-        self.docker_compose_minimum_version_met?
+        !self.docker_running? ||
+        (
+          self.docker_minimum_version_met? &&
+          self.docker_compose_minimum_version_met?
+        )
       )
+  end
+
+  def self.docker_running?
+    docker_exec = self.get_docker_exec
+    trash, status = Open3.capture2("#{docker_exec} system info")
+    return status.success?
   end
 
   def self.docker_installed?
@@ -37,14 +46,12 @@ class DockerRequirement < Requirement
     docker_exec = self.get_docker_exec
     current_vers, status =\
       Open3.capture2("#{docker_exec} version --format '{{.Server.Version}}'")
-    return false if !status.success?
     return Gem::Version.new(current_vers) >= Gem::Version.new(DOCKER_MIN_VERS)
   end
 
   def self.docker_compose_minimum_version_met?
     docker_exec = self.get_docker_exec
     current_vers, status = Open3.capture2("#{docker_exec} compose version --short")
-    return false if !status.success?
     return Gem::Version.new(current_vers) >= Gem::Version.new(COMPOSE_MIN_VERS)
   end
 end
