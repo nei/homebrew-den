@@ -53,46 +53,15 @@ class Den < Formula
   desc "Den is a CLI utility for working with docker-compose environments"
   homepage "https://swiftotter.github.io/den"
   license "MIT"
-  version "1.0.0-beta.10"
-  url "https://github.com/swiftotter/den/archive/1.0.0-beta.10.tar.gz"
-  sha256 "49d69675c92f6a6108aab0864e3bf593bec2aacedded953d7dfb0878813a121d"
+  version "1.0.0-beta.11"
+  url "https://github.com/swiftotter/den/archive/1.0.0-beta.11.tar.gz"
+  sha256 "386b5e4c5efe3651ddbc29f1bf821306c43fcbf2bad81780f00d428a7c0fe391"
   head "https://github.com/swiftotter/den.git", :branch => "main"
 
   depends_on DockerRequirement
 
   def install
     prefix.install Dir["*"]
-  end
-
-  def post_install
-    # This is required so docker is found if it's not installed via brew
-    ENV["PATH"] += ":/usr/local/bin" if OS.mac? || OS.linux?
-
-    # Specify necessary environment variables
-    ENV["WARDEN_DIR"] = prefix
-    ENV["WARDEN_HOME_DIR"] = Dir.home
-    ENV["WARDEN_SERVICE_DIR"] = prefix
-
-    # Future proof environment variable names
-    ENV["DEN_HOME_DIR"] = prefix
-    ENV["DEN_SERVICE_DIR"] = prefix
-
-    Pathname(prefix/"docker").cd do
-      den_version = File.read(prefix/"version").strip()
-      system "docker",
-            "compose",
-            "-p", "den",
-            "build",
-            "--no-cache",
-            "--build-arg", "DEN_VERSION=#{den_version}",
-            "dashboard"
-      system "docker",
-            "compose",
-            "--project-directory", prefix,
-            "-p", "den",
-            "-f", prefix/"docker/docker-compose.yml",
-            "up", "-d", "dashboard"
-    end
   end
 
   def caveats
