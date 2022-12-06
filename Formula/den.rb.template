@@ -66,6 +66,8 @@ class Den < Formula
   head "https://github.com/swiftotter/den.git", :branch => "main"
 
   depends_on DockerRequirement
+  depends_on "gettext"
+  depends_on "pv" => :recommended
 
   def install
     prefix.install Dir["*"]
