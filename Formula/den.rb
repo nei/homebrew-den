@@ -64,6 +64,8 @@ class Den < Formula
   url "https://github.com/swiftotter/den/archive/1.0.0-beta.14.tar.gz"
   sha256 "a138e24ed4c9e9715c9f6212687906e46ef84195f3ff94b352c421bd3e999eac"
   head "https://github.com/swiftotter/den.git", :branch => "main"
+  deprecate! date: "2023-10-04", because: "Warden is now the preferred tool for local development.  View https://github.com/swiftotter/den/blob/main/README.md for migration assistance.  Den may not be installed after October 2025"
+  disable! date: "2025-10-04", because: "Warden is now the preferred tool for local development.  View https://github.com/swiftotter/den/blob/main/README.md for migration assistance.  Den may not be installed after October 2025"
 
   depends_on DockerRequirement
   depends_on "gettext"
